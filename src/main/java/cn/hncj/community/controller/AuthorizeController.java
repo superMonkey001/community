@@ -1,7 +1,9 @@
 package cn.hncj.community.controller;
 
+import cn.hncj.community.bean.User;
 import cn.hncj.community.dto.AccessTokenDTO;
 import cn.hncj.community.dto.GithubUser;
+import cn.hncj.community.mapper.UserMapper;
 import cn.hncj.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,12 +14,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 @Controller
 public class AuthorizeController {
     @Autowired
     private GithubProvider provider;
-
+    @Autowired
+    private UserMapper mapper;
     @Value("${github.client.id}")
     private String clientId;
     @Value("${github.client.secret}")
@@ -34,10 +38,17 @@ public class AuthorizeController {
         dto.setRedirect_uri(redirectUri);
         dto.setState(state);
         String token = provider.getAccessToken(dto);
-        GithubUser user = provider.getUser(token);
-        if(user!=null)
+        GithubUser githubUser = provider.getUser(token);
+        if(githubUser!=null)
         {
-            session.setAttribute("user",user);
+            User user = new User();
+            user.setAccountId(String.valueOf(githubUser.getId()));
+            user.setName(githubUser.getName());
+            user.setToken(UUID.randomUUID().toString());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
+            session.setAttribute("user",githubUser);
+            mapper.insert(user);
             return "redirect:/";
         }else
         {
