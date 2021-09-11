@@ -18,7 +18,7 @@
                     data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">河南城建学院</span>
             </button>
-            <a class="navbar-brand" href="#">河南城建学院</a>
+            <a class="navbar-brand" href="/">河南城建学院</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -31,6 +31,9 @@
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <li th:if="${session.user!=null}">
+                    <a href="/publish">发布</a>
+                </li>
                 <li class="dropdown" th:if="${session.user!=null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">[[${session.user.name}]]<span class="caret"></span></a>
@@ -52,19 +55,20 @@
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发起</h2>
             <hr style="color: #c1e2b3">
-            <form action="">
+            <form action="/publish" method="post">
                 <div class="form-group">
                     <label for="title">问题描述</label>
-                    <input type="email" class="form-control" id="title" placeholder="question...">
+                    <input type="text" th:value="${title}"  name=title class="form-control" id="title" placeholder="question...">
                 </div>
                 <div class="form-group">
-                    <label for="title">问题补充</label>
-                    <textarea class="form-control" name="description" id="description" cols="30" rows="10"></textarea>
+                    <label for="description">问题补充</label>
+                    <textarea class="form-control" th:text="${description}"  name="description" id="description" cols="30" rows="10"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="tag">标记</label>
-                    <input type="email" class="form-control" id="tag" placeholder="输入标记，以，隔开">
+                    <input type="text" name="tag" th:value="${tag}" class="form-control" id="tag" placeholder="输入标记，以，隔开">
                 </div>
+                <span class="alert alert-danger" th:if="${error!=null}" th:text="${error}"></span>
                 <button type="submit" class="btn btn-success btn-publish">发布</button>
             </form>
         </div>
