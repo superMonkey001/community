@@ -26,28 +26,9 @@ public class IndexController {
     private QuestionDTOService questionDTOService;
     @GetMapping("/")
     public String index(HttpServletRequest request, Model model, @RequestParam(value="pn",defaultValue = "1") Integer pn){
-        Cookie[] cookies = request.getCookies();
-        if(cookies!=null&&cookies.length>0)
-        {
-        for (Cookie cookie : cookies) {
-            if(cookie.getName().equals("token"))
-            {
-                String token = cookie.getValue();
-                System.out.println(token+"------------------");
-                User user = userMapper.selectByToken(token);
-                if(user!=null)
-                {
-                    HttpSession session = request.getSession();
-                    session.setAttribute("user",user);
-//                    Cookie cookie2 = new Cookie("JSESSIONID", session.getId());
-//                    cookie2.setMaxAge(1);
-                }
-                break;
-            }
-        }}
 //        List<QuestionDTO> questionList=questionDTOService.list();
 //        model.addAttribute("questions",questionList);
-        Page<QuestionDTO> questionDTOPage = new Page<>(pn,5);
+        Page<QuestionDTO> questionDTOPage = new Page<>(pn,8);
         Page<QuestionDTO> page = questionDTOService.page(questionDTOPage);
         List<QuestionDTO> questionDTOS = page.getRecords();
 //        List<QuestionDTO> newQuestionDTOS = new ArrayList<>();
@@ -57,7 +38,7 @@ public class IndexController {
 //            newQuestionDTOS.add(questionDTO);
         }
         page.setRecords(questionDTOS);
-        model.addAttribute("page",page);
+        model.addAttribute("questions",page);
         return "index";
     }
 }
