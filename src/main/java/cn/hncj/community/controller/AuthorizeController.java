@@ -5,6 +5,7 @@ import cn.hncj.community.dto.AccessTokenDTO;
 import cn.hncj.community.dto.GithubUser;
 import cn.hncj.community.mapper.UserMapper;
 import cn.hncj.community.provider.GithubProvider;
+import cn.hncj.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
@@ -23,7 +24,7 @@ public class AuthorizeController {
     @Autowired
     private GithubProvider provider;
     @Autowired
-    private UserMapper mapper;
+    private UserService userService;
     @Value("${github.client.id}")
     private String clientId;
     @Value("${github.client.secret}")
@@ -41,22 +42,27 @@ public class AuthorizeController {
         dto.setState(state);
         String token = provider.getAccessToken(dto);
         GithubUser githubUser = provider.getUser(token);
-        if(githubUser!=null)
-        {
+        if (githubUser != null) {
             User user = new User();
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setName(githubUser.getName());
             user.setToken(UUID.randomUUID().toString());
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatar_url());
-            session.setAttribute("user",githubUser);
-            mapper.insert(user);
-            response.addCookie(new Cookie("token",user.getToken()));
+            session.setAttribute("user", githubUser);
+            userService.createOrUpdate(user);
+            response.addCookie(new Cookie("token", user.getToken()));
             return "redirect:/";
-        }else
-        {
+        } else {
             return "redirect:/";
         }
+
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie token = new Cookie("token", null);
+        token.setMaxAge(0);
+        response.addCookie(token);
+        return "redirect:/";
     }
 }

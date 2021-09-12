@@ -25,7 +25,6 @@ public class LoginInterceptor implements HandlerInterceptor {
                 if(cookie.getName().equals("token"))
                 {
                     String token = cookie.getValue();
-                    System.out.println(token+"------------------");
                     user = userMapper.selectByToken(token);
                     if(user!=null)
                     {

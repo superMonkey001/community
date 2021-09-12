@@ -6,6 +6,9 @@ import cn.hncj.community.dto.QuestionDTO;
 import cn.hncj.community.mapper.QuestionMapper;
 import cn.hncj.community.mapper.UserMapper;
 import cn.hncj.community.service.QuestionDTOService;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.fasterxml.jackson.databind.util.BeanUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Wrapper;
 
 @Controller
 public class PublishController {
@@ -24,7 +28,6 @@ public class PublishController {
     private QuestionMapper questionMapper;
     @Autowired
     private QuestionDTOService questionDTOService;
-
     @GetMapping("/publish")
     public String publish() {
         return "publish";
@@ -44,6 +47,7 @@ public class PublishController {
     public String doPublish(@RequestParam("title") String title,
                             @RequestParam("description") String description,
                             @RequestParam("tag") String tag,
+                            @RequestParam("id") Integer id,
                             HttpServletRequest request,
                             Model model) {
         model.addAttribute("title",title);
@@ -69,7 +73,18 @@ public class PublishController {
         question.setCreator(user.getId());
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
-        questionMapper.create(question);
+        question.setId(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question,questionDTO);
+        UpdateWrapper<QuestionDTO> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",question.getId());
+        if(question.getId()==null)
+        {
+            questionMapper.create(question);
+        }
+        else{
+        questionDTOService.update(questionDTO,wrapper);
+        }
         return "redirect:/";
     }
 }

@@ -11,11 +11,11 @@
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div th:replace="~{navigation :: nav_top}"></div>
+<div th:replace="~{navi :: nav_top}"></div>
 <div class="container-fluid  main profile">
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <h2><span th:text="${sectionName}"></span></h2>
+            <h2 th:text="${sectionName}"></h2>
             <hr style="color: #c1e2b3">
             <!--提问的问题信息-->
             <div class="media" th:each="myQuestion:${myQuestions.records}">
@@ -25,7 +25,9 @@
                     </a>
                 </div>
                 <div class="media-body">
+                    <a th:href="@{/question/{id}(id=${myQuestion.id})}">
                     <h4 class="media-heading">[[${myQuestion.title}]]</h4>
+                    </a>
                     <span th:text="${myQuestion.description}"></span>
                     <span class="text-desc">[[${myQuestion.commentCount}]]个回复 • [[${myQuestion.viewCount}]] 次浏览 • [[${#dates.format(myQuestion.gmtCreate,'yyyy年-MM月-dd日 HH:mm:ss')}]]</span>
                 </div>

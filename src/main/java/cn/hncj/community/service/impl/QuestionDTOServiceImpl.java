@@ -7,6 +7,7 @@ import cn.hncj.community.mapper.QuestionDTOMapper;
 import cn.hncj.community.mapper.QuestionMapper;
 import cn.hncj.community.mapper.UserMapper;
 import cn.hncj.community.service.QuestionDTOService;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import java.util.List;
 public class QuestionDTOServiceImpl extends ServiceImpl<QuestionDTOMapper,QuestionDTO> implements QuestionDTOService {
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    private QuestionDTOMapper questionDTOMapper;
     @Autowired
     private UserMapper userMapper;
     public List<QuestionDTO> list() {
@@ -31,6 +34,17 @@ public class QuestionDTOServiceImpl extends ServiceImpl<QuestionDTOMapper,Questi
             questionDTOS.add(questionDTO);
         }
         return questionDTOS;
+    }
+
+    @Override
+    public void intView(Integer id) {
+        QuestionDTO questionDTO = questionDTOMapper.selectById(id);
+        QuestionDTO updateQuestionDTO = new QuestionDTO();
+        questionDTO.setViewCount(questionDTO.getViewCount()+1);
+        BeanUtils.copyProperties(questionDTO,updateQuestionDTO);
+        UpdateWrapper<QuestionDTO> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",id);
+        questionDTOMapper.update(updateQuestionDTO,updateWrapper);
     }
 
 }

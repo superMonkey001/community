@@ -24,10 +24,6 @@ public class ProfileController {
     @GetMapping("/profile/{action}")
     public String profile(HttpServletRequest request, @PathVariable String action, Model model, @RequestParam(value = "pn" , defaultValue = "1") Integer pn){
         User user = (User) request.getSession().getAttribute("user");
-        if(user==null)
-        {
-            return "redirect:/";
-        }
         if ("questions".equals(action)) {
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
