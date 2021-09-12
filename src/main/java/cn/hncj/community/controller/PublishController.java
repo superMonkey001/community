@@ -2,12 +2,15 @@ package cn.hncj.community.controller;
 
 import cn.hncj.community.bean.Question;
 import cn.hncj.community.bean.User;
+import cn.hncj.community.dto.QuestionDTO;
 import cn.hncj.community.mapper.QuestionMapper;
 import cn.hncj.community.mapper.UserMapper;
+import cn.hncj.community.service.QuestionDTOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -20,13 +23,23 @@ public class PublishController {
     @Autowired
     private QuestionMapper questionMapper;
     @Autowired
-    private UserMapper userMapper;
+    private QuestionDTOService questionDTOService;
 
     @GetMapping("/publish")
     public String publish() {
         return "publish";
     }
 
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name = "id") Long id,
+                       Model model) {
+        QuestionDTO question = questionDTOService.getById(id);
+        model.addAttribute("title", question.getTitle());
+        model.addAttribute("description", question.getDescription());
+        model.addAttribute("tag", question.getTag());
+        model.addAttribute("id", question.getId());
+        return "publish";
+    }
     @PostMapping("/publish")
     public String doPublish(@RequestParam("title") String title,
                             @RequestParam("description") String description,
@@ -48,28 +61,7 @@ public class PublishController {
         {   model.addAttribute("error","tag not null");
             return "publish";
         }
-        Cookie[] cookies = request.getCookies();
-        User user = null;
-        if (cookies != null && cookies.length > 0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    System.out.println(token+"====================");
-                    user = userMapper.selectByToken(token);
-                    if (user != null) {
-                        HttpSession session = request.getSession();
-                        session.setAttribute("user", user);
-//                    Cookie cookie2 = new Cookie("JSESSIONID", session.getId());
-//                    cookie2.setMaxAge(1);
-                    }
-                    break;
-                }
-            }
-        }
-        if (user == null) {
-            model.addAttribute("error", "no login");
-            return "publish";
-        }
+        User user = (User) request.getSession().getAttribute("user");
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
