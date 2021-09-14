@@ -3,6 +3,8 @@ package cn.hncj.community.service.impl;
 import cn.hncj.community.bean.Question;
 import cn.hncj.community.bean.User;
 import cn.hncj.community.dto.QuestionDTO;
+import cn.hncj.community.exception.CustomizeErrorCode;
+import cn.hncj.community.exception.CustomizeException;
 import cn.hncj.community.mapper.QuestionDTOMapper;
 import cn.hncj.community.mapper.QuestionMapper;
 import cn.hncj.community.mapper.UserMapper;
@@ -36,14 +38,50 @@ public class QuestionDTOServiceImpl extends ServiceImpl<QuestionDTOMapper,Questi
         return questionDTOS;
     }
 
+    public void createOrUpdate(QuestionDTO questionDTO) {
+        if (questionDTO.getId() == null) {
+            // 创建
+            questionDTO.setGmtCreate(System.currentTimeMillis());
+            questionDTO.setGmtModified(questionDTO.getGmtCreate());
+            questionDTO.setViewCount(0);
+            questionDTO.setLikeCount(0);
+            questionDTO.setCommentCount(0);
+            questionDTOMapper.insert(questionDTO);
+        } else {
+            // 更新
+            QuestionDTO updateQuestionDTO = new QuestionDTO();
+            updateQuestionDTO.setGmtModified(questionDTO.getGmtCreate());
+            updateQuestionDTO.setTitle(questionDTO.getTitle());
+            updateQuestionDTO.setDescription(questionDTO.getDescription());
+            updateQuestionDTO.setTag(questionDTO.getTag());
+            UpdateWrapper<QuestionDTO> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id",questionDTO.getId());
+            int updated = questionDTOMapper.update(questionDTO, updateWrapper);
+            if(updated!=1)
+            {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+        }
+    }
+
     @Override
-    public void intView(Integer id) {
+    public void incView(Integer id) {
         QuestionDTO questionDTO = questionDTOMapper.selectById(id);
         QuestionDTO updateQuestionDTO = new QuestionDTO();
         questionDTO.setViewCount(questionDTO.getViewCount()+1);
         BeanUtils.copyProperties(questionDTO,updateQuestionDTO);
         UpdateWrapper<QuestionDTO> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id",id);
+        questionDTOMapper.update(updateQuestionDTO,updateWrapper);
+    }
+
+    @Override
+    public void incCommentCount(QuestionDTO questionDTO) {
+        QuestionDTO updateQuestionDTO = new QuestionDTO();
+        questionDTO.setCommentCount(questionDTO.getCommentCount()+1);
+        BeanUtils.copyProperties(questionDTO,updateQuestionDTO);
+        UpdateWrapper<QuestionDTO> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",questionDTO.getId());
         questionDTOMapper.update(updateQuestionDTO,updateWrapper);
     }
 

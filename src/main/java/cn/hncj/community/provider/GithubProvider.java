@@ -4,13 +4,22 @@ import cn.hncj.community.dto.AccessTokenDTO;
 import cn.hncj.community.dto.GithubUser;
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
 public class GithubProvider {
-    public String getAccessToken(AccessTokenDTO dto) {
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+    @Autowired
+    private HttpServletResponse response;
+    public String getAccessToken(AccessTokenDTO dto)  {
         MediaType mediaType
                 = MediaType.get("application/json; charset=utf-8");
 
@@ -25,7 +34,11 @@ public class GithubProvider {
             String token = string.split("&")[0].split("=")[1];
             return token;
         } catch (IOException e) {
-            e.printStackTrace();
+            httpServletRequest.getSession().removeAttribute("user");
+            Cookie tokenCookie = new Cookie("token", null);
+            tokenCookie.setMaxAge(0);
+            response.addCookie(tokenCookie);
+            System.out.println(e.getMessage());
         }
         return null;
     }

@@ -33,7 +33,8 @@ public class AuthorizeController {
     private String redirectUri;
 
     @GetMapping("/callback")
-    public String callback(String code, String state, HttpSession session, HttpServletResponse response) {
+    public String callback(String code, String state, HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
         AccessTokenDTO dto = new AccessTokenDTO();
         dto.setClient_id(clientId);
         dto.setClient_secret(clientSecret);
@@ -41,24 +42,29 @@ public class AuthorizeController {
         dto.setRedirect_uri(redirectUri);
         dto.setState(state);
         String token = provider.getAccessToken(dto);
+        if(token==null)
+        {return "redirect:/";}
         GithubUser githubUser = provider.getUser(token);
         if (githubUser != null) {
+//            System.out.println(githubUser.getId());
             User user = new User();
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setName(githubUser.getName());
             user.setToken(UUID.randomUUID().toString());
             user.setAvatarUrl(githubUser.getAvatar_url());
-            session.setAttribute("user", githubUser);
-            userService.createOrUpdate(user);
+            User updateUser = userService.createOrUpdate(user);
+            session.setAttribute("user",updateUser);
             response.addCookie(new Cookie("token", user.getToken()));
             return "redirect:/";
-        } else {
+                                }
+        else {
             return "redirect:/";
         }
 
     }
+
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request,HttpServletResponse response){
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().removeAttribute("user");
         Cookie token = new Cookie("token", null);
         token.setMaxAge(0);

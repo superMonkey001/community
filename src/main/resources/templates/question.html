@@ -9,32 +9,48 @@
     <link rel="stylesheet" href="/css/community.css">
     <script src="/js/jquery-1.12.4.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/community.js"></script>
 </head>
 <body>
 <div th:replace="~{navi :: nav_top}"></div>
 <div class="container-fluid  main profile">
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <h4><span th:text="${question.title}"></span></h4>
-            <span class="text-desc">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4><span th:text="${question.title}"></span></h4>
+                <span class="text-desc">
                 作者:<span th:text="${question.user.name}"></span>
                 发布时间:<span th:text="${#dates.format(question.gmtCreate,'yyyy/MM/dd HH:mm:ss')}"></span>
                 阅读数:<span th:text="${question.viewCount}"></span>
             </span><br>
-            <hr style="color: #c1e2b3">
-            <div>[[${question.description}]]</div>
-            <hr>
-            <a th:href="@{'/publish/'+${question.id}}" style="color: #8a6d3b" class="glyphicon glyphicon-pencil"
-               th:if="${session.user != null && session.user.id == question.creator}">编辑</a>
+                <hr style="color: #c1e2b3">
+                <div>[[${question.description}]]</div>
+                <hr>
+                <a th:href="@{'/publish/'+${question.id}}" style="color: #8a6d3b" class="glyphicon glyphicon-pencil"
+                   th:if="${session.user != null && question.creator == session.user.id}">编辑</a>
+            </div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_section">
+                <div class="media-left">
+                    <a href="#"><img class="media-object" th:src="${question.user.avatarUrl}" alt=""></a>
+                </div>
+                <div class="media-body">
+                    <h6>[[${question.user.name}]]</h6>
+                </div>
+                <input type="hidden" id="question_id" th:value="${question.id}" >
+                <textarea class="form-control comment" rows="6" id="comment_content"></textarea>
+                <button type="button" class="btn btn-success comment-btn" onclick="post()">回复</button>
+            </div>
+            <!---->
         </div>
         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>发起人:</h4>
                 <div class="media-left">
-                <a href="#"><img class="media-object" th:src="${question.user.avatarUrl}" alt=""></a>
+                    <a href="#"><img class="media-object" th:src="${question.user.avatarUrl}" alt=""></a>
                 </div>
                 <div class="media-body">
-                        <h6>[[${question.description}]]</h6>
+                    <h6>[[${question.user.name}]]</h6>
                 </div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

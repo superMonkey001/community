@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 
 public interface UserService {
 
-    void createOrUpdate(User user);
+    User createOrUpdate(User user);
 }
