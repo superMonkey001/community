@@ -17,6 +17,6 @@ public class Question {
     private Long gmtModified;
     private Integer viewCount;
     private Integer likeCount;
-    private Integer creator;
+    private Long creator;
     private Integer commentCount;
 }

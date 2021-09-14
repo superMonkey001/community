@@ -16,7 +16,7 @@ public class QuestionDTO {
     private Long gmtModified;
     private Integer viewCount;
     private Integer likeCount;
-    private Integer creator;
+    private Long creator;
     private Integer commentCount;
     @TableField(exist = false)
     private User user;

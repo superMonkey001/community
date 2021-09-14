@@ -29,6 +29,26 @@
                 <a th:href="@{'/publish/'+${question.id}}" style="color: #8a6d3b" class="glyphicon glyphicon-pencil"
                    th:if="${session.user != null && question.creator == session.user.id}">编辑</a>
             </div>
+            <h3>[[${question.commentCount}]]个回复</h3>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
+            <div  class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:each="comment:${comments}">
+                <div class="media-left">
+                    <a href="#"><img class="media-object" th:src="${comment.user.avatarUrl}" alt=""></a>
+                </div>
+                <div class="media-body">
+                    <div class="media-heading">
+                    <h6>[[${comment.user.name}]]</h6>
+                        <div>我是回复内容</div>
+                        <div class="menu">
+                            <span class="glyphicon glyphicon-thumbs-up icon"></span>
+                            <span class="glyphicon glyphicon-comment icon"></span>
+                            <span class="pull-right" th:text="${#dates.format(comment.gmtCreate,'yyyy/MM/dd')}"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_section">
                 <div class="media-left">
