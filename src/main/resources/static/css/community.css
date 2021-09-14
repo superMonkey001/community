@@ -52,3 +52,15 @@ color: #999;}
 .menu .icon:hover{
     color: #499ef3;
 }
+.comments
+{   padding-bottom: 5px;
+    margin-bottom:15px;
+    border-bottom:1px solid #999999;
+}
+.community-menu
+{
+    display: block;
+    color: #999999;
+    font-size:13px;
+    margin-bottom:15px;
+}

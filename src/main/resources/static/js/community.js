@@ -1,6 +1,11 @@
 function post(){
     var questionId = $("#question_id")[0].value;
     var commentContent = $("#comment_content").val();
+    if (!commentContent)
+    {
+        alert("不能回复空内容~~~");
+        return;
+    }
     $.ajax(
         {
             type:"post",
@@ -14,7 +19,7 @@ function post(){
             success:function (param) {
                 if(param.code==200)
                 {
-                    $("#comment_section").hide();
+                    location.reload();
                 }
                 else
                 {

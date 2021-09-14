@@ -20,33 +20,36 @@
                 <h4><span th:text="${question.title}"></span></h4>
                 <span class="text-desc">
                 作者:<span th:text="${question.user.name}"></span>
-                发布时间:<span th:text="${#dates.format(question.gmtCreate,'yyyy/MM/dd HH:mm:ss')}"></span>
-                阅读数:<span th:text="${question.viewCount}"></span>
+                 | 发布时间:<span th:text="${#dates.format(question.gmtCreate,'yyyy/MM/dd HH:mm:ss')}"></span>
+                 | 阅读数:<span th:text="${question.viewCount}"></span>
             </span><br>
                 <hr style="color: #c1e2b3">
                 <div>[[${question.description}]]</div>
                 <hr>
-                <a th:href="@{'/publish/'+${question.id}}" style="color: #8a6d3b" class="glyphicon glyphicon-pencil"
+                <a th:href="@{'/publish/'+${question.id}}" style="color: #8a6d3b"
+                   class="community-menu glyphicon glyphicon-pencil"
                    th:if="${session.user != null && question.creator == session.user.id}">编辑</a>
             </div>
-            <h3>[[${question.commentCount}]]个回复</h3>
-            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
-            <div  class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:each="comment:${comments}">
-                <div class="media-left">
-                    <a href="#"><img class="media-object" th:src="${comment.user.avatarUrl}" alt=""></a>
-                </div>
-                <div class="media-body">
-                    <div class="media-heading">
-                    <h6>[[${comment.user.name}]]</h6>
-                        <div>我是回复内容</div>
-                        <div class="menu">
-                            <span class="glyphicon glyphicon-thumbs-up icon"></span>
-                            <span class="glyphicon glyphicon-comment icon"></span>
-                            <span class="pull-right" th:text="${#dates.format(comment.gmtCreate,'yyyy/MM/dd')}"></span>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3>[[${question.commentCount}]]个回复</h3>
+                <hr>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments" th:each="comment:${comments}">
+                    <div class="media-left">
+                        <a href="#"><img class="media-object" th:src="${comment.user.avatarUrl}" alt=""></a>
+                    </div>
+                    <div class="media-body">
+                        <div class="media-heading">
+                            <h6>[[${comment.user.name}]]</h6>
+                            <div>[[${comment.content}]]</div>
+                            <div class="menu">
+                                <span class="glyphicon glyphicon-thumbs-up icon"></span>
+                                <span class="glyphicon glyphicon-comment icon"></span>
+                                <span class="pull-right"
+                                      th:text="${#dates.format(comment.gmtCreate,'yyyy/MM/dd')}"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
 
             </div>
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -57,7 +60,7 @@
                 <div class="media-body">
                     <h6>[[${question.user.name}]]</h6>
                 </div>
-                <input type="hidden" id="question_id" th:value="${question.id}" >
+                <input type="hidden" id="question_id" th:value="${question.id}">
                 <textarea class="form-control comment" rows="6" id="comment_content"></textarea>
                 <button type="button" class="btn btn-success comment-btn" onclick="post()">回复</button>
             </div>
