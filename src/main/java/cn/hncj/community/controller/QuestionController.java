@@ -19,11 +19,9 @@ public class QuestionController {
     @Autowired
     private UserMapper userMapper;
     @GetMapping("/question/{id}")
-    public String question(@PathVariable Integer id, Model model, HttpServletRequest request){
+    public String question(@PathVariable Integer id, Model model){
         QuestionDTO questionDTO = questionDTOService.getById(id);
         questionDTO.setUser(userMapper.findById(questionDTO.getCreator()));
-        User user = (User) request.getSession().getAttribute("user");
-//        System.out.println(user.getId());
         questionDTOService.incView(id);
         model.addAttribute("question",questionDTO);
         return "question";
