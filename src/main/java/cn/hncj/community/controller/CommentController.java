@@ -30,14 +30,13 @@ public class CommentController {
             return ResultDTO.error(CustomizeErrorCode.NO_LOGIN);
         }
         Comment comment = new Comment();
-        comment.setId(1L);
+//        comment.setId(1L);
         comment.setType(commentDTO.getType());
         comment.setParentId(commentDTO.getParentId());
         comment.setContent(commentDTO.getContent());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentator(user.getId());
-        comment.setCommentator(1);
         comment.setLikeCount(0L);
         commentService.insert(comment);
         return ResultDTO.okOf();

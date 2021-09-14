@@ -1,14 +1,18 @@
 package cn.hncj.community.service.impl;
 
+import cn.hncj.community.bean.Comment;
 import cn.hncj.community.bean.Question;
 import cn.hncj.community.bean.User;
 import cn.hncj.community.dto.QuestionDTO;
 import cn.hncj.community.exception.CustomizeErrorCode;
 import cn.hncj.community.exception.CustomizeException;
+import cn.hncj.community.mapper.CommentMapper;
 import cn.hncj.community.mapper.QuestionDTOMapper;
 import cn.hncj.community.mapper.QuestionMapper;
 import cn.hncj.community.mapper.UserMapper;
 import cn.hncj.community.service.QuestionDTOService;
+import com.baomidou.mybatisplus.core.conditions.query.Query;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +29,8 @@ public class QuestionDTOServiceImpl extends ServiceImpl<QuestionDTOMapper,Questi
     private QuestionDTOMapper questionDTOMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CommentMapper commentMapper;
     public List<QuestionDTO> list() {
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         List<Question> list = questionMapper.list();
@@ -54,6 +60,9 @@ public class QuestionDTOServiceImpl extends ServiceImpl<QuestionDTOMapper,Questi
             updateQuestionDTO.setTitle(questionDTO.getTitle());
             updateQuestionDTO.setDescription(questionDTO.getDescription());
             updateQuestionDTO.setTag(questionDTO.getTag());
+            QueryWrapper<Comment> commentQueryWrapper = new QueryWrapper<>();
+            commentQueryWrapper.eq("parent_id",questionDTO.getId());
+            updateQuestionDTO.setCommentCount(commentMapper.selectCount(commentQueryWrapper));
             UpdateWrapper<QuestionDTO> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("id",questionDTO.getId());
             int updated = questionDTOMapper.update(questionDTO, updateWrapper);
@@ -78,7 +87,9 @@ public class QuestionDTOServiceImpl extends ServiceImpl<QuestionDTOMapper,Questi
     @Override
     public void incCommentCount(QuestionDTO questionDTO) {
         QuestionDTO updateQuestionDTO = new QuestionDTO();
-        questionDTO.setCommentCount(questionDTO.getCommentCount()+1);
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("parent_id",questionDTO.getId());
+        questionDTO.setCommentCount(commentMapper.selectCount(queryWrapper));
         BeanUtils.copyProperties(questionDTO,updateQuestionDTO);
         UpdateWrapper<QuestionDTO> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id",questionDTO.getId());

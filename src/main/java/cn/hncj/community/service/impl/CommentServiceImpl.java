@@ -10,6 +10,7 @@ import cn.hncj.community.mapper.CommentMapper;
 import cn.hncj.community.mapper.QuestionDTOMapper;
 import cn.hncj.community.service.CommentService;
 import cn.hncj.community.service.QuestionDTOService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,12 +45,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment > impl
             }else
             {
                 QuestionDTO questionDTO = questionDTOMapper.selectById(comment.getParentId());
+//                QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+//                queryWrapper.eq("parent_id",questionDTO.getId());
+//                questionDTO.setCommentCount(commentMapper.selectCount(queryWrapper));
                 if (questionDTO==null)
                 {
                     throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
                 }
                 commentMapper.insert(comment);
-                questionDTO.setCommentCount(1);
                 questionDTOService.incCommentCount(questionDTO);
             }
     }
