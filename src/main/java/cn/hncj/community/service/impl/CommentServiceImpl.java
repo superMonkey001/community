@@ -13,6 +13,7 @@ import cn.hncj.community.mapper.UserMapper;
 import cn.hncj.community.service.CommentService;
 import cn.hncj.community.service.QuestionDTOService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +47,23 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment > impl
             }
             if(comment.getType()==CommentTypeEnum.COMMENT.getType())
             {
-                Comment dbcomment = commentMapper.selectById(comment.getParentId());
-                if (dbcomment==null)
+                Comment dbComment = commentMapper.selectById(comment.getParentId());
+                if (dbComment==null)
                 {
                     throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
-                }
+                }//增加二级评论数
                 commentMapper.insert(comment);
+                QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("id",comment.getParentId());
+                Comment parentComment = commentMapper.selectOne(queryWrapper);
+                if(parentComment.getCommentCount()==null)
+                {
+                    parentComment.setCommentCount(0);
+                }
+                parentComment.setCommentCount(parentComment.getCommentCount()+1);
+                UpdateWrapper<Comment> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq("id",comment.getParentId());
+                commentMapper.update(parentComment,updateWrapper);
             }else
             {
                 QuestionDTO questionDTO = questionDTOMapper.selectById(comment.getParentId());
