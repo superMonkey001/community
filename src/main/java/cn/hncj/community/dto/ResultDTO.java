@@ -5,9 +5,10 @@ import cn.hncj.community.exception.CustomizeException;
 import lombok.Data;
 
 @Data
-public class ResultDTO {
+public class ResultDTO<T> {
     private Integer code;
     private String message;
+    private T data;
     public static ResultDTO error(Integer code,String message)
     {
         ResultDTO resultDTO = new ResultDTO();
@@ -28,5 +29,12 @@ public class ResultDTO {
 
     public static ResultDTO error(CustomizeException e) {
         return error(e.getCode(),e.getMessage());
+    }
+    public static <T> ResultDTO okOf(T t){
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(200);
+        resultDTO.setMessage("request success");
+        resultDTO.setData(t);
+        return resultDTO;
     }
 }

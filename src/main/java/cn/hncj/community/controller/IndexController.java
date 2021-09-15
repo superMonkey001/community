@@ -29,6 +29,7 @@ public class IndexController {
 //        List<QuestionDTO> questionList=questionDTOService.list();
 //        model.addAttribute("questions",questionList);
         Page<QuestionDTO> questionDTOPage = new Page<>(pn,8);
+        questionDTOPage.setDesc("gmt_create");
         Page<QuestionDTO> page = questionDTOService.page(questionDTOPage);
         List<QuestionDTO> questionDTOS = page.getRecords();
 //        List<QuestionDTO> newQuestionDTOS = new ArrayList<>();

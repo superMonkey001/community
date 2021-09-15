@@ -17,9 +17,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,9 +68,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment > impl
     }
 
     @Override
-    public List<CommentDTO> listByQuestionId(Integer id) {
+    public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("parent_id",id).eq("type",CommentTypeEnum.QUESTION.getType());
+        queryWrapper.eq("parent_id",id).eq("type", type.getType());
+        queryWrapper.orderByDesc("gmt_create");
         List<Comment> comments = commentMapper.selectList(queryWrapper);
 
         if(comments.size()==0)

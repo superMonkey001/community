@@ -18,7 +18,7 @@ public class AdminWebConfig {
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(loginInterceptor).addPathPatterns("/**")
                 .excludePathPatterns("/","/css/**","/fonts/**","/images/**","/js/**","/callback"
-                        ,"/question/*","/comment"
+                        ,"/question/*","/comment/**"
                         )
                 ;
             }
