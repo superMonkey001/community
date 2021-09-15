@@ -11,4 +11,6 @@ public interface QuestionDTOService extends IService<QuestionDTO> {
 
     void incView(Integer id);
     void incCommentCount(QuestionDTO questionDTO);
+
+    List<QuestionDTO> selectRelated(QuestionDTO questionDTO);
 }

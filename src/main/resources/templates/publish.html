@@ -21,7 +21,8 @@
                 <div class="form-group">
                     <label for="title">问题描述</label>
                     <input type="hidden" name="id" th:value="${id}">
-                    <input type="text" th:value="${title}"  name=title class="form-control" id="title" placeholder="question...">
+                    <input type="text" th:value="${title}"  name=title class="form-control" id="title" placeholder="question..."
+                           autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="description">问题补充</label>
@@ -29,7 +30,8 @@
                 </div>
                 <div class="form-group">
                     <label for="tag">标记</label>
-                    <input type="text" name="tag" th:value="${tag}" class="form-control" id="tag" placeholder="输入标记，以，隔开">
+                    <input type="text" name="tag" th:value="${tag}" class="form-control" id="tag" placeholder="输入标记，以，隔开"
+                    autocomplete="off">
                 </div>
                 <span class="alert alert-danger" th:if="${error!=null}" th:text="${error}"></span>
                 <button type="submit" class="btn btn-success btn-publish">发布</button>

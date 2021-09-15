@@ -16,4 +16,5 @@ public interface QuestionMapper {
     void  create(Question question);
     @Select("select * from question")
     List<Question> list();
+    List<Question> selectRelated(Question question);
 }

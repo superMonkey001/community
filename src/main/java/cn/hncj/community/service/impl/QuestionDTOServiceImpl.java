@@ -15,12 +15,17 @@ import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
 @Service
 public class QuestionDTOServiceImpl extends ServiceImpl<QuestionDTOMapper,QuestionDTO> implements QuestionDTOService {
     @Autowired
@@ -94,6 +99,27 @@ public class QuestionDTOServiceImpl extends ServiceImpl<QuestionDTOMapper,Questi
         UpdateWrapper<QuestionDTO> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id",questionDTO.getId());
         questionDTOMapper.update(updateQuestionDTO,updateWrapper);
+    }
+
+    @Override
+    public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
+        if(StringUtils.isBlank(queryDTO.getTag()))
+        {
+            return new ArrayList<>();
+        }
+
+
+        String[] tags = StringUtils.split(queryDTO.getTag(), ",");
+        String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
+        Question question = new Question();
+        question.setId(queryDTO.getId());
+        question.setTag(regexpTag);
+        List<Question> questions = questionMapper.selectRelated(question);
+        List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q,questionDTO);
+            return questionDTO;}).collect(Collectors.toList());
+        return questionDTOS;
     }
 
 }
