@@ -27,6 +27,12 @@
                 <hr style="color: #c1e2b3">
                 <div>[[${question.description}]]</div>
                 <hr>
+                <span th:each="tag:${question.tag.split(',')}">
+                <span class="label label-info question-tag">
+                    <span class="glyphicon glyphicon-tags"></span>
+                    [[${tag}]]</span>
+                </span>
+                <hr>
                 <a th:href="@{'/publish/'+${question.id}}" style="color: #8a6d3b"
                    class="community-menu glyphicon glyphicon-pencil"
                    th:if="${session.user != null && question.creator == session.user.id}">编辑</a>
@@ -46,8 +52,8 @@
                                 <span class="glyphicon glyphicon-thumbs-up icon"></span>
                                 <span class="glyphicon glyphicon-comment icon" th:data-id="${comment.id}"
                                       onclick="collapseComments(this)">
-                                     [[${comment.commentCount}]]
                                 </span>
+                                    <span>共有[[${comment.commentCount}]]条评论</span>
                                 <span class="pull-right"
                                       th:text="${#dates.format(comment.gmtCreate,'yyyy/MM/dd')}"></span>
                             </div>

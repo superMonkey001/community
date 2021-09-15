@@ -75,3 +75,11 @@ color: #999;}
     padding-top: 15px;
     margin-bottom: 15px;
 }
+.question-tag{
+    font-size: 100%;
+    cursor: pointer;
+    font-weight: 500;
+}
+.question-tag:hover{
+    color: #ec971f;
+}
