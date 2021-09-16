@@ -36,7 +36,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment > impl
     @Autowired
     private UserMapper userMapper;
     @Override
-    public void insert(Comment comment) {
+    public void insert(Comment comment,User user) {
             if (comment.getParentId()==null || comment.getParentId()==0)
             {
                 throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);

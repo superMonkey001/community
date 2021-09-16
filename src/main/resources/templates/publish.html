@@ -67,9 +67,7 @@
                     <div id="tagTab" style="display: none" class="public-tag-tab">
                         <ul class="nav nav-tabs" role="tablist" >
                             <li role="presentation" th:each="tabTag,stat:${tags}" th:class="${stat.first ? 'active':''}">
-                                <a th:href="${'#'+tabTag.categoryName}" aria-controls="home" role="tab" data-toggle="tab">
-                                    [[${tabTag.categoryName}]]
-                                </a>
+                                <a th:href="${'#'+tabTag.categoryName}" aria-controls="home" role="tab" data-toggle="tab">[[${tabTag.categoryName}]]</a>
                             </li>
                         </ul>
                         <div class="tab-content">

@@ -18,7 +18,7 @@ import java.util.List;
 
 @Controller
 public class CommentController {
-    @Autowired
+    @Autowired()
     private CommentService commentService;
 
     @ResponseBody
@@ -44,7 +44,7 @@ public class CommentController {
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
-        commentService.insert(comment);
+        commentService.insert(comment,user);
         return ResultDTO.okOf();
     }
     @ResponseBody
