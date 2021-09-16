@@ -64,23 +64,24 @@
                            placeholder="输入标记，以，隔开"
                            autocomplete="off">
                 </div>
-                <div id="tagTab" style="display: none" th:each="tag:${tags}">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
-                                                                  data-toggle="tab">[[${tag.categoryName}]]</a></li>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="home">
-                            <span class="label label-info question-tag"><span
-                                    class="glyphicon glyphicon-tags">Java</span></span>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="profile">
-                            <span class="label label-info question-tag"><span
-                                    class="glyphicon glyphicon-tags"> Spring</span></span>
+                    <div id="tagTab" style="display: none" class="public-tag-tab">
+                        <ul class="nav nav-tabs" role="tablist" >
+                            <li role="presentation" th:each="tabTag,stat:${tags}" th:class="${stat.first ? 'active':''}">
+                                <a th:href="${'#'+tabTag.categoryName}" aria-controls="home" role="tab" data-toggle="tab">
+                                    [[${tabTag.categoryName}]]
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel"  th:id="${tabTag.categoryName}" th:each="tabTag,stat:${tags}"
+                            th:class="${stat.first ? 'active tab-pane': 'tab-pane'}"
+                            >
+                            <span class="label label-info question-tag" th:each="tag:${tabTag.tags}">
+                                <span class="glyphicon glyphicon-tags">[[${tag}]]</span>
+                            </span>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <button type="submit" class="btn btn-success btn-publish">发布</button>
             </form>
         </div>

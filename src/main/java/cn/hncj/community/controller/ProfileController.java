@@ -32,7 +32,7 @@ public class ProfileController {
             model.addAttribute("sectionName", "最新回复");}
         Page<QuestionDTO> questionDTOPage = new Page<>(pn,8);
         QueryWrapper<QuestionDTO> wrapper = new QueryWrapper<>();
-        wrapper.eq("creator",7);
+        wrapper.eq("creator",user.getId()).orderByDesc("gmt_create");
         Page<QuestionDTO> myQuestions = questionDTOService.page(questionDTOPage, wrapper);
         List<QuestionDTO> records = questionDTOPage.getRecords();
         for (QuestionDTO questionDTO : records) {

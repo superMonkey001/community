@@ -25,11 +25,12 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <a th:href="@{/question/{id}(id=${myQuestion.id})}">
                     <h4 class="media-heading">[[${myQuestion.title}]]</h4>
-                    </a>
+
                     <span th:text="${myQuestion.description}"></span>
-                    <span class="text-desc">[[${myQuestion.commentCount}]]个回复 • [[${myQuestion.viewCount}]] 次浏览 • [[${#dates.format(myQuestion.gmtCreate,'yyyy年-MM月-dd日 HH:mm:ss')}]]</span>
+                    <span class="text-desc">[[${myQuestion.commentCount}]]个回复 • [[${myQuestion.viewCount}]] 次浏览 • [[${#dates.format(myQuestion.gmtCreate,'yyyy年-MM月-dd日 HH:mm:ss')}]]
+                    </span>
+                    <a th:href="@{/question/{id}(id=${myQuestion.id})}">编辑</a>
                 </div>
             </div>
             <!--分页条-->

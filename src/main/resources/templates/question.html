@@ -27,16 +27,16 @@
                 <hr style="color: #c1e2b3">
                 <div>[[${question.description}]]</div>
                 <hr>
-                <span th:each="tag:${question.tag.split(',')}">
+                <span class="public-tag-tab" th:each="tag:${question.tag.split(',')}">
                 <span class="label label-info question-tag">
-                    <span class="glyphicon glyphicon-tags"></span>
-                    [[${tag}]]</span>
+                    <span class="glyphicon glyphicon-tags">[[${tag}]]</span>
+                </span>
                 </span>
                 <hr>
                 <div style="width: 40px;">
-                <a th:href="@{'/publish/'+${question.id}}" style="color: #8a6d3b"
-                   class="community-menu glyphicon glyphicon-pencil"
-                   th:if="${session.user != null && question.creator == session.user.id}">编辑</a>
+                    <a th:href="@{'/publish/'+${question.id}}" style="color: #8a6d3b"
+                       class="community-menu glyphicon glyphicon-pencil"
+                       th:if="${session.user != null && question.creator == session.user.id}">编辑</a>
                 </div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -103,8 +103,9 @@
                 <hr>
                 <img class="img-thumbnail" style="width:200px;height: 200px;" th:src="@{/images/4.jpg}"/>
                 <h4>相关问题</h4>
-                <li  th:each="relatedQuestion:${relatedQuestions}">
-                    <a class="related-question" th:href="@{/question/{id}(id=${relatedQuestion.id})}" th:text="${relatedQuestion.title}">
+                <li th:each="relatedQuestion:${relatedQuestions}">
+                    <a class="related-question" th:href="@{/question/{id}(id=${relatedQuestion.id})}"
+                       th:text="${relatedQuestion.title}">
                     </a>
                 </li>
             </div>
