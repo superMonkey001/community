@@ -2,7 +2,9 @@ package cn.hncj.community.controller;
 
 import cn.hncj.community.bean.Question;
 import cn.hncj.community.bean.User;
+import cn.hncj.community.cache.TagCache;
 import cn.hncj.community.dto.QuestionDTO;
+import cn.hncj.community.dto.TagDTO;
 import cn.hncj.community.mapper.QuestionMapper;
 import cn.hncj.community.mapper.UserMapper;
 import cn.hncj.community.service.QuestionDTOService;
@@ -53,8 +55,9 @@ public class PublishController {
         model.addAttribute("title",title);
         model.addAttribute("description",description);
         model.addAttribute("tag",tag);
+        model.addAttribute("tags", TagCache.get());
         if(title==null||title.length()==0)
-        {   model.addAttribute("error","not null");
+        {   model.addAttribute("error","title not null");
             return "publish";
         }
         if(description==null||description.length()==0)
