@@ -77,10 +77,10 @@ color: #999;}
 }
 .question-tag{
     font-size: 100%;
-    cursor: pointer;
     font-weight: 500;
 }
-.question-tag:hover{
+.hoverTag:hover{
+    cursor: pointer;
     color: #ffff00;
 }
 .related-question
